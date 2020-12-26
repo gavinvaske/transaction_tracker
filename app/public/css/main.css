@@ -1,3 +1,8 @@
 #main-body {
     background-color: aquamarine;
 }
+
+img {
+    max-width:100%;
+    max-height:100%;
+};
