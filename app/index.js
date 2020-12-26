@@ -1,18 +1,16 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
+const path = require('path');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-const PORT = 3000;
-
-// EJS
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '/views'));
 
-// Body Parser
+app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({extended: false}));
-
-// Routes
 app.use('/', require('./routes/index'));
 
 app.listen(PORT, () => {
