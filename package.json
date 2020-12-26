@@ -2,10 +2,10 @@
   "name": "transaction_tracker",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
-    "start": "node index.js",
-    "nodemon": "nodemon index.js",
+    "start": "node app/index.js",
+    "nodemon": "nodemon app/index.js",
     "test": "jest"
   },
   "author": "Gavin Vaske",
