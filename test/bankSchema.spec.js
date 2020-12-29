@@ -1,5 +1,5 @@
 const chance = require('chance').Chance();
-const bankSchema = require('../app/schema/bankSchema');
+const Bank = require('../app/models/bank');
 
 describe('fails validation', () => {
     it('should have a name defined', () => {
@@ -21,8 +21,10 @@ describe('passes validation', () => {
     });
 });
 
-function validateSchema(bank, shouldValidate) {
-    const isValid = bankSchema.validate(bank).error === undefined;
+function validateSchema(attributes, shouldValidate) {
+    const bank = new Bank(attributes);
+    const error = bank.validateSync();
+    const isValid = !error;
 
     expect(isValid).toBe(shouldValidate);
 }

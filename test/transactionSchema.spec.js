@@ -1,5 +1,5 @@
-const transactionSchema = require('../app/schema/transactionSchema');
 const chance = require('chance').Chance();
+const Transaction = require('../app/models/transaction');
 
 let transaction;
 
@@ -42,8 +42,10 @@ describe('fails validation', () => {
     });
 });
 
-function validateSchema(transaction, shouldValidate) {
-    const isValid = transactionSchema.validate(transaction).error === undefined;
+function validateSchema(attributes, shouldValidate) {
+    const transaction = new Transaction(attributes);
+    const error = transaction.validateSync();
+    const isValid = !error;
 
     expect(isValid).toBe(shouldValidate);
 }
