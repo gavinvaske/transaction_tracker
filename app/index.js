@@ -1,6 +1,14 @@
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
+const database = require('./services/database');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
+const db = mongoose.connection;
+
+dotenv.config();
+
+database.connectToDatabase();
 
 const app = express();
 const defaultPort = 3000;
@@ -16,6 +24,13 @@ app.use(expressLayouts);
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 
-app.listen(PORT, () => {
-    console.log(`Server started listening on PORT = ${PORT}`);
+db.on('error', (error) => {
+    throw new Error(`Error connecting to the database ${error}`);
 });
+
+db.once('open', function() {
+    app.listen(PORT, () => {
+        console.log(`Server started listening on PORT = ${PORT}`);
+    });
+});
+
