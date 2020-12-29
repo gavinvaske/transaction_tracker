@@ -14,13 +14,15 @@
   "author": "Gavin Vaske",
   "license": "ISC",
   "dependencies": {
-    "ejs": "^3.1.5",
-    "express": "^4.17.1",
-    "express-ejs-layouts": "^2.5.0"
+    "@hapi/joi": "17.1.1",
+    "chance": "^1.1.7",
+    "ejs": "3.1.5",
+    "express": "4.17.1",
+    "express-ejs-layouts": "2.5.0"
   },
   "devDependencies": {
-    "eslint": "^7.16.0",
-    "jest": "^26.6.3",
-    "nodemon": "^2.0.6"
+    "eslint": "7.16.0",
+    "jest": "26.6.3",
+    "nodemon": "2.0.6"
   }
 }
