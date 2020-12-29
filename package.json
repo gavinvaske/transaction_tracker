@@ -14,11 +14,12 @@
   "author": "Gavin Vaske",
   "license": "ISC",
   "dependencies": {
-    "@hapi/joi": "17.1.1",
     "chance": "^1.1.7",
+    "dotenv": "^8.2.0",
     "ejs": "3.1.5",
     "express": "4.17.1",
-    "express-ejs-layouts": "2.5.0"
+    "express-ejs-layouts": "2.5.0",
+    "mongoose": "^5.11.9"
   },
   "devDependencies": {
     "eslint": "7.16.0",
