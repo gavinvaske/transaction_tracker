@@ -4,11 +4,11 @@ const path = require('path');
 const database = require('./services/database');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const db = mongoose.connection;
+const databaseConnection = mongoose.connection;
 
 dotenv.config();
 
-database.connectToDatabase();
+database.connectToDatabase(process.env.databaseURI);
 
 const app = express();
 const defaultPort = 3000;
@@ -18,17 +18,18 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
 app.use(express.static(__dirname + '/public'));
-app.use(express.urlencoded({extended: false}));
+app.use(express.json())
 app.use(expressLayouts);
 
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
+app.use('/banks', require('./routes/banks'));
 
-db.on('error', (error) => {
+databaseConnection.on('error', (error) => {
     throw new Error(`Error connecting to the database ${error}`);
 });
 
-db.once('open', function() {
+databaseConnection.once('open', function() {
     app.listen(PORT, () => {
         console.log(`Server started listening on PORT = ${PORT}`);
     });
