@@ -5,13 +5,11 @@ const Bank = require('../models/bank');
 
 // Create
 router.post('/', (request, response) => {
-    const bank = new Bank({
-        name: request.body.name
-    });
+    const bank = new Bank(request.body);
 
     bank.save((error, document) => {
         if (error) {
-            response.send(`Error: ${error}`)
+            handleError(error, response);
         }
         response.send(document);
     });
@@ -21,7 +19,7 @@ router.post('/', (request, response) => {
 router.get('/', (request, response) => {
     Bank.find((error, documents) => {
         if (error) {
-            response.send(`Error: ${error}`)
+            handleError(error, response);
         }
         response.send(documents);
     });
@@ -31,7 +29,7 @@ router.get('/:id', (request, response) => {
 
     Bank.findById(id, (error, document) => {
         if (error) {
-            response.send(`Error: ${error}`)
+            handleError(error, response);
         }
         response.send(document);
     });
@@ -39,18 +37,18 @@ router.get('/:id', (request, response) => {
 
 // Update
 router.put('/:id', (request, response) => {
-    const id = request.params.id
+    const id = request.params.id;
 
     Bank.findById(id, function (error, document) {
         if (error) {
-            response.send(`Error: ${error}`);
+            handleError(error, response);
         }
         
         document.name = request.body.name;
 
         document.save((error, document) => {
             if (error) {
-                response.send(`Error: ${error}`)
+                handleError(error, response);
             }
             response.send(document);
         });
@@ -63,10 +61,14 @@ router.delete('/:id', (request, response) => {
 
     Bank.findByIdAndDelete(id, (error, document) => {
         if (error){ 
-            response.send(`Error: ${error}`);
+            handleError(error, response);
         }
         response.send(document);
     });
 });
+
+function handleError(error, response) {
+    response.send(error.message);
+}
 
 module.exports = router;
