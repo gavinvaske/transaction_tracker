@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const databaseURI = process.env.databaseURI;
 
-function connectToDatabase() {
+function connectToDatabase(databaseURI) {
     if (!databaseURI) {
         throw new Error('Database URI is not defined');
     }
