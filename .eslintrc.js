@@ -1,3 +1,5 @@
+const requiredNumberOfSpaces = 4;
+
 module.exports = {
     'env': {
         'browser': true,
@@ -17,6 +19,11 @@ module.exports = {
             'ignoreArrayIndexes': true 
         }],
         'no-multi-spaces': 'error',
-        'no-unused-vars': 'error'
+        'no-unused-vars': 'error',
+        'keyword-spacing': ['error', { 
+            'before': true,
+            'after': true 
+        }],
+        'indent': ['error', requiredNumberOfSpaces]
     }
 };

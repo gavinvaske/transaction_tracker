@@ -5,6 +5,7 @@
   "main": "app/index.js",
   "scripts": {
     "start": "node app/index.js",
+    "start-auth-server": "nodemon app/authorizationServer.js",
     "nodemon": "nodemon app/index.js",
     "test": "jest",
     "lint": "./node_modules/.bin/eslint .",
@@ -14,12 +15,14 @@
   "author": "Gavin Vaske",
   "license": "ISC",
   "dependencies": {
-    "chance": "^1.1.7",
-    "dotenv": "^8.2.0",
+    "bcrypt": "5.0.0",
+    "chance": "1.1.7",
+    "dotenv": "8.2.0",
     "ejs": "3.1.5",
     "express": "4.17.1",
     "express-ejs-layouts": "2.5.0",
-    "mongoose": "^5.11.9"
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "5.11.9"
   },
   "devDependencies": {
     "eslint": "7.16.0",

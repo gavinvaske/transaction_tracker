@@ -1,12 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const database = require('./services/database');
-const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const databaseConnection = mongoose.connection;
-
-dotenv.config();
 
 database.connectToDatabase(process.env.databaseURI);
 
