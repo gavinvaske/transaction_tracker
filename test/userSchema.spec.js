@@ -5,18 +5,28 @@ describe('attributes are required', () => {
     let user;
     beforeEach(() => {
         user = {
-            userName: chance.string(),
-            password: chance.string()
+            email: chance.string(),
+            password: chance.string(),
+            name: chance.string()
         };
     });
+
+    it('has valid attributes', () => {
+        validateSchema(user, true);
+    });
     
-    it('user name is required', () => {
-        delete user.userName;
+    it('email is required', () => {
+        delete user.email;
         validateSchema(user, false);
     });
 
     it('password is required', () => {
         delete user.password;
+        validateSchema(user, false);
+    });
+
+    it('name is required', () => {
+        delete user.name;
         validateSchema(user, false);
     });
 });
