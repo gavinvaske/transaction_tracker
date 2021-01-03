@@ -4,9 +4,15 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const database = require('./services/database');
 const mongoose = require('mongoose');
-const databaseConnection = mongoose.connection;
+const flash = require('express-flash');
+const session = require('express-session');
+const passport = require('passport');
+const passportInitializer = require('./configurations/passport-config');
+
 
 database.connectToDatabase(process.env.databaseURI);
+const databaseConnection = mongoose.connection;
+passportInitializer(passport);
 
 const app = express();
 const defaultPort = 3000;
@@ -16,8 +22,16 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '/views'));
 
 app.use(express.static(__dirname + '/public'));
-app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 app.use(expressLayouts);
+app.use(flash());
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));

@@ -2,84 +2,64 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
-const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const {checkAuthenticated, checkNotAuthenticated} = require('../services/authenticator');
 
-// Create
-router.post('/', async (request, response) => {
+router.get('/login', checkNotAuthenticated, (request, response) => {
+    response.render('login.ejs');
+});
+
+router.get('/register', checkNotAuthenticated, (request, response) => {
+    response.render('register.ejs');
+});
+
+router.post('/register', checkNotAuthenticated, async (request, response) => {
     try {
         const saltComplexity = 10;
         const hashedPassword = await bcrypt.hash(request.body.password, saltComplexity);
         const userParameters = {
-            userName: request.body.userName,
+            name: request.body.name.toLowerCase(),
+            email: request.body.email.toLowerCase(),
             password: hashedPassword
         };
         const newUser = new User(userParameters);
 
-        newUser.save((error, document) => {
+        // eslint-disable-next-line no-magic-numbers
+        const doesUserExist = User.count({email: request.body.email}) > 0;
+
+        if (doesUserExist) {
+            return response.render('register', {
+                error: 'email already exists'
+            });
+        }
+
+        newUser.save((error) => {
             if (error) {
-                handleError(error, response);
+                response.render('register');
             }
-            const successCode = 200;
-            response.status(successCode).send(document);
+            response.render('login');
         });
     } catch (error) {
-        const errorCode = 500;
-        console.log(`Error while creating user | ${error}`);
-        response.status(errorCode).send('Error: Unable to create user');
+        console.log(`Error creating user: ${error}`);
+        response.render('register');
     }
 });
 
-// Read
-router.get('/', (request, response) => {
-    User.find((error, documents) => {
-        if (error) {
-            handleError(error, response);
-        }
-        response.send(documents);
+router.get('/dashboard', checkAuthenticated, (request, response) => {
+    response.render('dashboard.ejs', {
+        user: request.user
     });
 });
 
-router.delete('/:id', (request, response) => {
-    const id = request.params.id;
+router.post('/login', checkNotAuthenticated, passport.authenticate('local', {
+    successRedirect: '/users/dashboard',
+    failureRedirect: '/users/login',
+    failureFlash: true
+}));
 
-    User.findByIdAndDelete(id, (error, document) => {
-        if (error){ 
-            handleError(error, response);
-        }
-        response.send(document);
-    });
+router.get('/logout', checkAuthenticated, (request, response) => {
+    request.logOut();
+    response.redirect('/users/login');
 });
-
-router.get('/register', (request, response) => {
-    response.render('register');
-});
-
-function handleError(error, response) {
-    const errorCode = 500;
-    response.status(errorCode).send(error.message);
-}
-
-router.get('/dashboard', authenticateAuthorizationToken, (request, response) => {
-    response.send(`This is /users/dashboard for user ${JSON.stringify(request.user)}`);
-});
-
-function authenticateAuthorizationToken(request, response, next) {
-    const authHeader = request.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (!token) {
-        const unauthorizedStatusCode = 401;
-        return response.status(unauthorizedStatusCode).send('No token provided in request');
-    }
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, user) => {
-        if (error) {
-            const forbiddenStatusCode = 403;
-            return response.status(forbiddenStatusCode).send('Your token is expired or invalid');
-        }
-        request.user = user;
-        next();
-    });
-}
 
 module.exports = router;
