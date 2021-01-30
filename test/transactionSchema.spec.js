@@ -13,7 +13,8 @@ describe('fails validation', () => {
                 bank: {
                     name: chance.string()
                 }
-            }
+            },
+            category: 'food and drink'
         };
     });
 
@@ -39,6 +40,20 @@ describe('fails validation', () => {
         delete transaction.description;
 
         validateSchema(transaction, false);
+    });
+
+    it('should not require a category to be defined', () => {
+        delete transaction.category;
+        
+        validateSchema(transaction, true);
+    });
+
+    it('should convert category to lowercase', () => {
+        transaction.category = 'I AM UPPER';
+
+        const transactionModel = new Transaction(transaction);
+
+        expect(transactionModel.category).toBe(transaction.category.toLowerCase());
     });
 });
 

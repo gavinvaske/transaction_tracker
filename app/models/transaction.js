@@ -14,6 +14,11 @@ const transactionSchema = new schema({
     source: {
         type: Account.schema,
         required: true
+    },
+    category: {
+        type: String,
+        lowercase: true,
+        required: false
     }
 }, {
     timestamps: true
