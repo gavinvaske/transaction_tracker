@@ -8,6 +8,7 @@ const flash = require('express-flash');
 const session = require('express-session');
 const passport = require('passport');
 const passportInitializer = require('./configurations/passport-config');
+const fileUpload = require('express-fileupload');
 
 
 database.connectToDatabase(process.env.databaseURI);
@@ -32,10 +33,12 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(fileUpload());
 
 app.use('/', require('./routes/index'));
 app.use('/users', require('./routes/users'));
 app.use('/banks', require('./routes/banks'));
+app.use('/transactions', require('./routes/transactions'));
 
 databaseConnection.on('error', (error) => {
     throw new Error(`Error connecting to the database ${error}`);

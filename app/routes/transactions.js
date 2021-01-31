@@ -1,18 +1,24 @@
 const express = require('express');
-const router = express.Router();
-
 const Transaction = require('../models/transaction');
+
+const router = express.Router();
 
 // Create
 router.post('/', (request, response) => {
-    const transaction = new Transaction(request.body);
-
-    transaction.save((error, document) => {
-        if (error) {
-            handleError(error, response);
-        }
-        response.send(document);
-    });
+    if (request.files) {
+        const file = request.files.filename;
+        const filename = file.name;
+        const uploadDirectory = './app/uploads/';
+        
+        file.mv(uploadDirectory + filename, (error) => {
+            if (error) {
+                console.log(error);
+                response.send('Uh oh, an error occurred.');
+            } else {
+                response.send('Upload completed successfully.');
+            }
+        });
+    }
 });
 
 // Read
@@ -40,7 +46,7 @@ router.put('/:id', (request, response) => {
     response.send('TODO');
 });
 
-// Delete 
+// Delete
 router.delete('/:id', (request, response) => {
     const id = request.params.id;
 
