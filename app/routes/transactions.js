@@ -1,5 +1,6 @@
 const express = require('express');
 const Transaction = require('../models/transaction');
+const TransactionService = require('../services/transaction');
 
 const router = express.Router();
 
@@ -7,17 +8,9 @@ const router = express.Router();
 router.post('/', (request, response) => {
     if (request.files) {
         const file = request.files.filename;
-        const filename = file.name;
         const uploadDirectory = './app/uploads/';
         
-        file.mv(uploadDirectory + filename, (error) => {
-            if (error) {
-                console.log(error);
-                response.send('Uh oh, an error occurred.');
-            } else {
-                response.send('Upload completed successfully.');
-            }
-        });
+        TransactionService.saveTransactions(file, uploadDirectory, response);
     }
 });
 

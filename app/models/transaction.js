@@ -15,6 +15,10 @@ const transactionSchema = new schema({
         type: Account.schema,
         required: true
     },
+    date: {
+        type: Date,
+        required: true
+    },
     category: {
         type: String,
         lowercase: true,
