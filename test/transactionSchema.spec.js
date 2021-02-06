@@ -66,6 +66,14 @@ describe('passes validation', () => {
     });
 });
 
+describe('passes validation', () => {
+    it('should not require a category to be defined', () => {
+        delete transaction.category;
+        
+        validateSchema(transaction, true);
+    });
+});
+
 function validateSchema(attributes, shouldValidate) {
     const transaction = new Transaction(attributes);
     const error = transaction.validateSync();
