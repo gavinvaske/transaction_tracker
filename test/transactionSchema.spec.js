@@ -3,21 +3,22 @@ const Transaction = require('../app/models/transaction');
 
 let transaction;
 
-describe('fails validation', () => {
-    beforeEach(() => {
-        transaction = {
-            description: chance.string(),
-            amount: chance.floating(),
-            source: {
-                type: 'checking',
-                bank: {
-                    name: chance.string()
-                }
-            },
-            category: 'food and drink'
-        };
-    });
+beforeEach(() => {
+    transaction = {
+        description: chance.string(),
+        amount: chance.floating(),
+        source: {
+            type: 'checking',
+            bank: {
+                name: chance.string()
+            }
+        },
+        category: 'food and drink',
+        date: new Date('12-10-2020')
+    };
+});
 
+describe('fails validation', () => {
     it('should fail when object is empty', () => {
         transaction = {};
 
@@ -48,6 +49,20 @@ describe('fails validation', () => {
         const transactionModel = new Transaction(transaction);
 
         expect(transactionModel.category).toBe(transaction.category.toLowerCase());
+    });
+
+    it('should have a date defined', () => {
+        delete transaction.date;
+        
+        validateSchema(transaction, false);
+    });
+});
+
+describe('passes validation', () => {
+    it('should not require a category to be defined', () => {
+        delete transaction.category;
+        
+        validateSchema(transaction, true);
     });
 });
 
