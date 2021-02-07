@@ -1,11 +1,12 @@
 const express = require('express');
 const Transaction = require('../models/transaction');
 const TransactionService = require('../services/transaction');
+const {checkAuthenticated} = require('../services/authenticator');
 
 const router = express.Router();
 
 // Create
-router.post('/', (request, response) => {
+router.post('/', checkAuthenticated, (request, response) => {
     if (request.files) {
         const file = request.files.filename;
         const uploadDirectory = './app/uploads/';
@@ -15,15 +16,18 @@ router.post('/', (request, response) => {
 });
 
 // Read
-router.get('/', (request, response) => {
+router.get('/', checkAuthenticated, (request, response) => {
     Transaction.find((error, documents) => {
         if (error) {
             handleError(error, response);
         }
-        response.send(documents);
+        response.render('transactions.ejs', {
+            transactions: documents
+        });
     });
 });
-router.get('/:id', (request, response) => {
+
+router.get('/:id', checkAuthenticated, (request, response) => {
     const id = request.params.id;
 
     Transaction.findById(id, (error, document) => {
@@ -35,12 +39,12 @@ router.get('/:id', (request, response) => {
 });
 
 // Update
-router.put('/:id', (request, response) => {
+router.put('/:id', checkAuthenticated, (request, response) => {
     response.send('TODO');
 });
 
 // Delete
-router.delete('/:id', (request, response) => {
+router.delete('/:id', checkAuthenticated, (request, response) => {
     const id = request.params.id;
 
     Transaction.findByIdAndDelete(id, (error, document) => {

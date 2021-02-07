@@ -1,0 +1,21 @@
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Date</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Source</th>
+        <th scope="col">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <% transactions.forEach((transaction, index) => { %>
+            <th scope="row"><%= (index + 1) %></th>
+            <td><%= transaction.date %></td>
+            <td>$<%= transaction.amount %></td>
+            <td><%= transaction.source.bank.name %> - <%= transaction.source.type %></td>
+            <td><%= transaction.description %></td>
+          </tr>
+        <% }) %>
+    </tbody>
+</table>
