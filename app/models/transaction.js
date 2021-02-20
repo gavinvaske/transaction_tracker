@@ -13,7 +13,7 @@ const transactionSchema = new schema({
     },
     source: {
         type: Account.schema,
-        required: true
+        required: false
     },
     date: {
         type: Date,

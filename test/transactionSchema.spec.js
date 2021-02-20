@@ -25,12 +25,6 @@ describe('fails validation', () => {
         validateSchema(transaction, false);
     });
 
-    it('should have a source defined', () => {
-        delete transaction.source;
-
-        validateSchema(transaction, false);
-    });
-
     it('should have an amount defined', () => {
         delete transaction.amount;
 
@@ -59,6 +53,11 @@ describe('fails validation', () => {
 });
 
 describe('passes validation', () => {
+    it('should not require a source', () => {
+        delete transaction.source;
+
+        validateSchema(transaction, true);
+    });
     it('should not require a category to be defined', () => {
         delete transaction.category;
         
