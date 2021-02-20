@@ -11,9 +11,13 @@
     <tbody>
         <% transactions.forEach((transaction, index) => { %>
             <th scope="row"><%= (index + 1) %></th>
-            <td><%= transaction.date %></td>
+            <td><%= transaction.date.getMonth() + 1 %>-<%= transaction.date.getDate()%>-<%= transaction.date.getFullYear()%></td>
             <td>$<%= transaction.amount %></td>
-            <td><%= transaction.source.bank.name %> - <%= transaction.source.type %></td>
+            <% if (transaction.source) { %>
+              <td><%= transaction.source.bank.name %> - <%= transaction.source.type %></td>
+            <% } else { %>
+              <td></td>
+            <% } %>
             <td><%= transaction.description %></td>
           </tr>
         <% }) %>

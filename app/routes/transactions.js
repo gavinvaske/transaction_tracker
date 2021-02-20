@@ -5,7 +5,6 @@ const {checkAuthenticated} = require('../services/authenticator');
 
 const router = express.Router();
 
-// Create
 router.post('/', checkAuthenticated, (request, response) => {
     if (request.files) {
         const file = request.files.filename;
@@ -15,7 +14,6 @@ router.post('/', checkAuthenticated, (request, response) => {
     }
 });
 
-// Read
 router.get('/', checkAuthenticated, (request, response) => {
     Transaction.find((error, documents) => {
         if (error) {
@@ -38,12 +36,6 @@ router.get('/:id', checkAuthenticated, (request, response) => {
     });
 });
 
-// Update
-router.put('/:id', checkAuthenticated, (request, response) => {
-    response.send('TODO');
-});
-
-// Delete
 router.delete('/:id', checkAuthenticated, (request, response) => {
     const id = request.params.id;
 
@@ -53,6 +45,17 @@ router.delete('/:id', checkAuthenticated, (request, response) => {
         }
         response.send(document);
     });
+});
+
+router.post('/deleteAll', checkAuthenticated, async (request, response) => {
+    console.log(`user = ${JSON.stringify(request.user)}`);
+    await Transaction.deleteMany({}, (error) => {
+        if (error) {
+            handleError(error);
+        }
+        response.redirect('/users/dashboard');
+    });
+
 });
 
 function handleError(error, response) {
