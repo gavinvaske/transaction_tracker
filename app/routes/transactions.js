@@ -6,12 +6,15 @@ const {checkAuthenticated} = require('../services/authenticator');
 const router = express.Router();
 
 router.post('/', checkAuthenticated, (request, response) => {
-    if (request.files) {
-        const file = request.files.filename;
-        const uploadDirectory = './app/uploads/';
-        
-        TransactionService.saveTransactions(file, uploadDirectory, response);
+    if (!request.files) {
+        response.redirect('/users/dashboard');
     }
+
+    const file = request.files.filename;
+    const uploadDirectory = './app/uploads/';
+    
+    TransactionService.saveTransactions(file, uploadDirectory, response);
+
 });
 
 router.get('/', checkAuthenticated, (request, response) => {
@@ -22,6 +25,21 @@ router.get('/', checkAuthenticated, (request, response) => {
         response.render('transactions.ejs', {
             transactions: documents
         });
+    });
+});
+
+router.get('/download', checkAuthenticated, (request, response) => {
+    Transaction.find((error, documents) => {
+        if (error) {
+            handleError(error, response);
+        }
+        var transactions = JSON.stringify(documents);
+        var filename = 'transactions.json';
+        var mimetype = 'application/json';
+
+        response.setHeader('Content-Type', mimetype);
+        response.setHeader('Content-disposition','attachment; filename=' + filename);
+        response.send(transactions);
     });
 });
 
@@ -55,7 +73,6 @@ router.post('/deleteAll', checkAuthenticated, async (request, response) => {
         }
         response.redirect('/users/dashboard');
     });
-
 });
 
 function handleError(error, response) {
